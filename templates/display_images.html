@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Feed</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;800&display=swap");
+      * {
+        font-family: "Nunito", sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+        outline: none;
+        scroll-behavior: smooth;
+        transition: all 0.3s cubic-bezier(0.16, 0.8, 0.62, 1.52);
+        text-transform: capitalize;
+        font-weight: normal;
+      }
+      #video-container {
+        display: flex;
+
+        margin-top: 20px;
+      }
+
+      #video {
+        width: 100%;
+        max-width: 920px;
+        border-radius: 15px;
+        padding: 20px;
+      }
+
+      #capture-btn {
+        margin-top: 20px;
+        margin-left: 20px;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .btn {
+        display: inline-block;
+        padding: 10px 15px;
+        font-size: 16px;
+        color: #080808;
+        background: transparent;
+        border: 2px solid rgb(255, 140, 0);
+
+        margin-top: 10px;
+        margin-left: 20px;
+        transition: 0.3s;
+        border-radius: 15px;
+      }
+
+      .btn:hover {
+        transform: scale(1.02);
+        background-color: rgb(255, 140, 0);
+      }
+      header {
+        position: relative;
+        top: 1.2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 98%;
+        z-index: 1000;
+        background: rgba(186, 186, 186, 0.301);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        border-radius: 0.5rem;
+      }
+      header .logo {
+        color: #333;
+        text-decoration: none;
+        font-size: 2.5rem;
+      }
+
+      header .logo span {
+        color: rgb(255, 140, 0);
+      }
+      header p {
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="#" class="logo"><span>MATRIX</span>INFINITY</a>
+      <p>DISPLAYING LIVE FEED</p>
+      <p>Press C to capture image</p>
+    </header>
+
+    <div id="video-container">
+      <video id="video" autoplay playsinline></video>
+    </div>
+    <button class="btn" onclick="captureImage()">Capture</button>
+    <button class="btn" id="record-btn" onclick="toggleRecording()">
+      Record
+    </button>
+
+    <script>
+      const video = document.getElementById("video");
+    const recordBtn = document.getElementById("record-btn");
+
+    let mediaRecorder;
+    let chunks = [];
+
+    function startRecording() {
+      chunks = [];
+      mediaRecorder = new MediaRecorder(video.srcObject);
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "video/webm" });
+
+        // Save the video to history/ directory
+        fetch("/saveVideo", {
+          method: "POST",
+          body: blob,
+        });
+
+        // Save the video to video/ directory
+        const formData = new FormData();
+        formData.append("video", blob);
+        fetch("/saveVideoToVideoFolder", {
+          method: "POST",
+          body: formData,
+        });
+
+        // Create download link for the recorded video
+        const videoUrl = URL.createObjectURL(blob);
+        const downloadLink = document.getElementById("download-video");
+        downloadLink.href = videoUrl;
+        downloadLink.style.display = "block";
+      };
+
+      mediaRecorder.start();
+      recordBtn.innerText = "Stop Recording";
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+        recordBtn.innerText = "Start Recording";
+      }
+    }
+
+    function toggleRecording() {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+    }
+
+    function captureImage() {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas
+        .getContext("2d")
+        .drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageDataURL = canvas.toDataURL("image/png");
+
+      const downloadLink = document.createElement("a");
+      downloadLink.href = imageDataURL;
+      downloadLink.download = "captured_image.png";
+      downloadLink.click();
+    }
+
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((error) => {
+        console.error("Error accessing webcam:", error);
+      });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "c" || event.key === "C") {
+        captureImage();
+      }
+
+      if (event.key === "r" || event.key === "R") {
+        toggleRecording();
+      }
+    });
+    </script>
+  </body>
+</html>

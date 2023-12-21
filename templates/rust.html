@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Detection Results</title>
+    <link rel="stylesheet" href="static/css/style.css" />
+</head>
+<body>
+<header class="header">
+      <section class="flex">
+        <a href="/" class="logo"
+          ><img src="static/images/bharatrov2.png" width="200px" alt="" srcset=""
+        /></a>
+
+
+
+
+      </section>
+    </header>
+    <div class="side-bar">
+      <div id="close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+
+      <div class="profile">
+        <img src="static/images/logo2.jpg" class="image" alt="" />
+        <h3 class="name">MATRIX INFINITY</h3>
+        <p class="role"></p>
+        <a href="/about" class="btn">view team</a>
+      </div>
+
+      <nav class="navbar">
+        <a href="/"><i class="fas fa-home"></i><span>home</span></a>
+        <a href="/about"
+          ><img
+            src="static/images/logo2.jpg"
+            width="25px"
+            style="margin-right: 10px"
+          /><span>about our team</span></a
+        >
+        <a href="/courses"
+          ><i class="fas fa-film"></i><span>Recorded Videos</span></a
+        >
+
+        <a href="/contact"
+          ><i class="fas fa-headset"></i><span>contact us</span></a
+        >
+
+        <a href="/crack"
+          ><i class="fas fa-headset"></i><span>crack detection</span></a
+        >
+        <a href="/rust"
+          ><i class="fas fa-headset"></i><span>rust detection</span></a
+        >
+      </nav>
+    </div>
+
+    <section class="image-grid" id="rustResults">
+        <h1 class="heading">RUST DETECTION RESULTS</h1>
+        <div class="box-container" id="rustImageContainer">
+            <!-- Rust detection results will be dynamically added here using JavaScript -->
+        </div>
+    <style>
+        h3{
+            font-size:25px;
+        }
+        .thumb img{
+        padding:10px;
+        }
+
+    </style>
+        <script>
+            var rustResults = {{ rust | tojson | safe }};
+
+            // Container element for rust detection results
+            var rustImageContainer = document.getElementById('rustImageContainer');
+
+            // Generate HTML elements for rust detection results
+            for (var frameKey in rustResults) {
+                if (rustResults.hasOwnProperty(frameKey)) {
+                    var frameData = rustResults[frameKey];
+                    var corrosionLevel = frameData[1];
+                    var outputImageSrc = frameData[2];
+                    var originalImageSrc = frameData[3];
+
+                    // Create box element
+                    var box = document.createElement('div');
+                    box.className = 'box';
+
+                    // Create thumb element for output image
+                    var thumbOutput = document.createElement('div');
+                    thumbOutput.className = 'thumb';
+
+                    // Create image element for output image
+                    var imgOutput = document.createElement('img');
+                    imgOutput.src = outputImageSrc;
+                    imgOutput.alt = corrosionLevel;
+
+                    // Append output image to thumb
+                    thumbOutput.appendChild(imgOutput);
+
+                    // Create thumb element for original image
+                    var thumbOriginal = document.createElement('div');
+                    thumbOriginal.className = 'thumb';
+
+                    // Create image element for original image
+                    var imgOriginal = document.createElement('img');
+                    imgOriginal.src = originalImageSrc;
+                    imgOriginal.alt = corrosionLevel;
+
+                    // Append original image to thumb
+                    thumbOriginal.appendChild(imgOriginal);
+
+                    // Append thumbs to box
+                    box.appendChild(thumbOriginal);
+                    box.appendChild(thumbOutput);
+
+
+                    // Create heading element for corrosion level
+                    var h3CorrosionLevel = document.createElement('h3');
+                    h3CorrosionLevel.textContent = corrosionLevel;
+
+                    // Append corrosion level to box
+                    box.appendChild(h3CorrosionLevel);
+
+                    // Append box to rustImageContainer
+                    rustImageContainer.appendChild(box);
+                }
+            }
+        </script>
+    </section>
+<script src="static/js/script.js"></script>
+
+</body>
+</html>

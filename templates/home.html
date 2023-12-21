@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matrix Infinity App</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="./static/images/infinitylogo2jpg.jpg"
+      style="border-radius: 50%"
+    />
+
+    <!-- font awesome cdn link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+    />
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="static/css/style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <section class="flex">
+        <a href="/" class="logo"
+          ><img src="static/images/bharat-hydrovision.png" width="300px" alt="" srcset=""
+        /></a>
+
+        <div class="icons">
+          <div id="menu-btn" class="fas fa-bars"></div>
+          <div id="search-btn" class="fas fa-search"></div>
+          <div id="user-btn" class="fas fa-user"></div>
+          <div id="toggle-btn" class="fas fa-sun"></div>
+        </div>
+
+        <div class="profile">
+          <img src="static/images/logo2.jpg" class="image" alt="" />
+          <h3 class="name">Matrix Infinity</h3>
+          <p class="role">Team</p>
+          <a href="/about" class="btn">view team</a>
+          <div class="flex-btn"></div>
+        </div>
+      </section>
+    </header>
+    <section class="home1">
+      <h1 class="banner">LIVE FEED</h1>
+      <div id="video-container">
+        <video id="video" autoplay playsinline></video>
+      </div>
+
+     
+      <style>
+        .home1 {
+          margin-top: 15px;
+          min-height: 50vh;
+          min-width: 1000px;
+
+          background: rgba(0, 0, 0, 0.5) url();
+          display: flex;
+          background-size: cover;
+          background-blend-mode: darken;
+          align-items: center;
+          justify-content: center;
+          flex-flow: column;
+          text-align: center;
+
+          position: relative;
+          overflow: hidden !important;
+          border-radius: 20px;
+        }
+
+        #video-container {
+          display: flex;
+          width: 750px;
+        }
+
+        #video {
+          width: 100%;
+          max-width: 1200px;
+          border-radius: 15px;
+          border-radius: 20px;
+          padding: 20px;
+        }
+      </style>
+    </section>
+    <div class="controls">
+      
+      <a class="btn" onclick="captureImage()">Capture</a>
+      <a class="btn" id="record-btn" onclick="toggleRecording()"> Record </a>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+const videoContainer = document.getElementById("video-container");
+const fullscreenBtn = document.getElementById("fullscreen-btn");
+const captureBtn = document.getElementById("capture-btn");
+const recordBtn = document.getElementById("record-btn");
+
+let mediaRecorder;
+let chunks = [];
+
+function startRecording() {
+chunks = [];
+mediaRecorder = new MediaRecorder(video.srcObject);
+mediaRecorder.ondataavailable = (event) => {
+  if (event.data.size > 0) {
+    chunks.push(event.data);
+  }
+};
+
+mediaRecorder.onstop = () => {
+  const blob = new Blob(chunks, { type: "video/webm" });
+  const formData = new FormData();
+  formData.append('file', blob, 'recorded_video.webm');
+
+  fetch('/upload_video', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => {
+    console.log('Video uploaded successfully');
+  })
+  .catch(error => {
+    console.error('Error uploading video:', error);
+  });
+
+  const videoUrl = URL.createObjectURL(blob);
+
+  const downloadLink = document.createElement("a");
+  downloadLink.href = videoUrl;
+  downloadLink.download = "recorded_video.webm";
+  downloadLink.click();
+};
+
+mediaRecorder.start();
+recordBtn.innerText = "Stop Recording";
+}
+
+function stopRecording() {
+if (mediaRecorder && mediaRecorder.state !== "inactive") {
+  mediaRecorder.stop();
+  recordBtn.innerText = "Start Recording";
+}
+}
+
+function toggleRecording() {
+if (mediaRecorder && mediaRecorder.state === "recording") {
+  stopRecording();
+} else {
+  startRecording();
+}
+}
+
+function captureImage() {
+const canvas = document.createElement("canvas");
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+canvas
+  .getContext("2d")
+  .drawImage(video, 0, 0, canvas.width, canvas.height);
+
+const imageDataURL = canvas.toDataURL("image/png");
+
+const downloadLink = document.createElement("a");
+downloadLink.href = imageDataURL;
+downloadLink.download = "captured_image.png";
+downloadLink.click();
+}
+
+navigator.mediaDevices
+.getUserMedia({ video: true })
+.then((stream) => {
+  video.srcObject = stream;
+})
+.catch((error) => {
+  console.error("Error accessing webcam:", error);
+});
+
+document.addEventListener("keydown", function (event) {
+if (event.key === "c" || event.key === "C") {
+  captureImage();
+}
+
+if (event.key === "r" || event.key === "R") {
+  toggleRecording();
+}
+
+if (event.key === "f" || event.key === "F") {
+  toggleFullscreen();
+}
+});
+
+fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+function toggleFullscreen() {
+if (videoContainer.style.width === "100%") {
+  // If already fullscreen, revert to original width
+  videoContainer.style.width = "750px";
+} else {
+  // If not fullscreen, set width to 100%
+  videoContainer.style.width = "100%";
+}
+}
+
+captureBtn.addEventListener("click", captureImage);
+recordBtn.addEventListener("click", toggleRecording);
+
+
+      // const video = document.getElementById("video");
+      // const videoContainer = document.getElementById("video-container");
+      // const fullscreenBtn = document.getElementById("fullscreen-btn");
+      // const captureBtn = document.getElementById("capture-btn");
+      // const recordBtn = document.getElementById("record-btn");
+
+      // let mediaRecorder;
+      // let chunks = [];
+
+      // function startRecording() {
+      //   chunks = [];
+      //   mediaRecorder = new MediaRecorder(video.srcObject);
+      //   mediaRecorder.ondataavailable = (event) => {
+      //     if (event.data.size > 0) {
+      //       chunks.push(event.data);
+      //     }
+      //   };
+
+      //   mediaRecorder.onstop = () => {
+      //     const blob = new Blob(chunks, { type: "video/webm" });
+      //     const videoUrl = URL.createObjectURL(blob);
+
+      //     const downloadLink = document.createElement("a");
+      //     downloadLink.href = videoUrl;
+      //     downloadLink.download = "recorded_video.webm";
+      //     downloadLink.click();
+      //   };
+
+      //   mediaRecorder.start();
+      //   recordBtn.innerText = "Stop Recording";
+      // }
+
+      // function stopRecording() {
+      //   if (mediaRecorder && mediaRecorder.state !== "inactive") {
+      //     mediaRecorder.stop();
+      //     recordBtn.innerText = "Start Recording";
+      //   }
+      // }
+
+      // function toggleRecording() {
+      //   if (mediaRecorder && mediaRecorder.state === "recording") {
+      //     stopRecording();
+      //   } else {
+      //     startRecording();
+      //   }
+      // }
+
+      // function captureImage() {
+      //   const canvas = document.createElement("canvas");
+      //   canvas.width = video.videoWidth;
+      //   canvas.height = video.videoHeight;
+      //   canvas
+      //     .getContext("2d")
+      //     .drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      //   const imageDataURL = canvas.toDataURL("image/png");
+
+      //   const downloadLink = document.createElement("a");
+      //   downloadLink.href = imageDataURL;
+      //   downloadLink.download = "captured_image.png";
+      //   downloadLink.click();
+      // }
+
+      // navigator.mediaDevices
+      //   .getUserMedia({ video: true })
+      //   .then((stream) => {
+      //     video.srcObject = stream;
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error accessing webcam:", error);
+      //   });
+
+      // document.addEventListener("keydown", function (event) {
+      //   if (event.key === "c" || event.key === "C") {
+      //     captureImage();
+      //   }
+
+      //   if (event.key === "r" || event.key === "R") {
+      //     toggleRecording();
+      //   }
+
+      //   if (event.key === "f" || event.key === "F") {
+      //     toggleFullscreen();
+      //   }
+      // });
+
+      // fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+      // function toggleFullscreen() {
+      //   if (videoContainer.style.width === "100%") {
+      //     // If already fullscreen, revert to original width
+      //     videoContainer.style.width = "750px";
+          
+      //   } else {
+      //     // If not fullscreen, set width to 100%
+      //     videoContainer.style.width = "100%";
+          
+      //   }
+      // }
+
+    </script>
+
+    <div class="side-bar" style="background-image: url(static/images/greyblur2.png);">
+      <div id="close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+
+      <div class="profile">
+        <img src="static/images/logo2.jpg" class="image" alt="" />
+        <h3 class="name">MATRIX INFINITY</h3>
+        <p class="role"></p>
+        <a href="/about" class="btn">view team</a>
+      </div>
+
+      <nav class="navbar">
+        <a href="/"><i class="fas fa-home"></i><span>home</span></a>
+
+        <a href="/courses"
+          ><i class="fas fa-film"></i><span>Recorded Videos</span></a
+        >
+
+
+
+        <a href="/crack"
+          ><i class="fas fa-headset"></i><span>Detected defects</span></a
+        >
+        <a href="/rust"
+          ><i class="fas fa-headset"></i><span>corrosion detection</span></a
+        >
+        <a href="/contact"
+          ><i class="fas fa-headset"></i><span>contact us</span></a
+        >
+      </nav>
+    </div>
+
+    <section class="home-grid">
+      <h1 class="heading">INSPECTION DETAILS</h1>
+
+      <div class="box-container">
+        <div class="box">
+          <h3 class="title">Crack Detection Data</h3>
+          <p class="likes">
+            Upload the video captured by the ROV here to Detect whether the Dam
+            structures contain any cracks
+          </p>
+          <a href="" class="inline-btn">Upload video</a>
+        </div>
+
+        <div class="box">
+          <h3 class="title">Crack Location</h3>
+          <p class="tutor">Location of crack will be displayed here.</p>
+        </div>
+      </div>
+    </section>
+    
+
+    <section class="courses" id="courses">
+      <h1 class="heading">Record History</h1>
+
+      <div class="box-container">
+        <div class="box">
+          <div class="tutor">
+            <img src="static/images/logo2.jpg" alt="" />
+            <div class="info">
+              <h3>History</h3>
+              <span>Recorded</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <img src="static/images/simulation1.png" alt="" />
+            <span>ROV</span>
+          </div>
+          <h3 class="title">Recorded Video 1</h3>
+          <a href="static/videos/simvideo1.mp4" class="inline-btn">view video</a>
+        </div>
+
+        <div class="box">
+          <div class="tutor">
+            <img src="static/images/logo2.jpg" alt="" />
+            <div class="info">
+              <h3>History</h3>
+              <span>Recorded</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <img src="static/images/simulation2.png" alt="" />
+            <span>ROV</span>
+          </div>
+          <h3 class="title">Recorded Video 1</h3>
+          <a
+            href="https://www.youtube.com/embed/_hxnulkE3Dc?autoplay=1&enablejsapi="
+            class="inline-btn"
+            >view video</a
+          >
+        </div>
+
+        <div class="box">
+          <div class="tutor">
+            <img src="static/images/logo2.jpg" alt="" />
+            <div class="info">
+              <h3>History</h3>
+              <span>Recorded</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <img src="static/images/simulation3.png" alt="" />
+            <span>ROV</span>
+          </div>
+          <h3 class="title">Recorded Video 1</h3>
+          <a
+            href="https://www.youtube.com/embed/_hxnulkE3Dc?autoplay=1&enablejsapi="
+            class="inline-btn"
+            >view video</a
+          >
+        </div>
+
+        <div class="box">
+          <div class="tutor">
+            <img src="static/images/logo2.jpg" alt="" />
+            <div class="info">
+              <h3>History</h3>
+              <span>Recorded</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <img src="static/images/simulation4.png" alt="" />
+            <span>ROV</span>
+          </div>
+          <h3 class="title">Recorded Video 1</h3>
+          <a
+            href="https://www.youtube.com/embed/_hxnulkE3Dc?autoplay=1&enablejsapi="
+            class="inline-btn"
+            >view video</a
+          >
+        </div>
+
+        <div class="box">
+          <div class="tutor">
+            <img src="static/images/logo2.jpg" alt="" />
+            <div class="info">
+              <h3>History</h3>
+              <span>Recorded</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <img src="static/images/simulation1.png" alt="" />
+            <span>ROV</span>
+          </div>
+          <h3 class="title">Recorded Video 1</h3>
+          <a
+            href="https://www.youtube.com/embed/_hxnulkE3Dc?autoplay=1&enablejsapi="
+            class="inline-btn"
+            >view video</a
+          >
+        </div>
+
+        <div class="box">
+          <div class="tutor">
+            <img src="static/images/logo2.jpg" alt="" />
+            <div class="info">
+              <h3>History</h3>
+              <span>Recorded</span>
+            </div>
+          </div>
+          <div class="thumb">
+            <img src="static/images/simulation1.png" alt="" />
+            <span>ROV</span>
+          </div>
+          <h3 class="title">Recorded Video 1</h3>
+          <a
+            href="https://www.youtube.com/embed/_hxnulkE3Dc?autoplay=1&enablejsapi="
+            class="inline-btn"
+            >view video</a
+          >
+        </div>
+      </div>
+
+      <div class="more-btn">
+        <a href="courses.html" class="inline-option-btn">view all</a>
+      </div>
+    </section>
+
+    <script src="static/js/script.js"></script>
+  </body>
+</html>
