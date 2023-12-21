@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crack Images</title>
+    <link rel="stylesheet" href="static/css/style.css" />
+</head>
+<body>
+    <div class="side-bar">
+      <div id="close-btn">
+        <i class="fas fa-times"></i>
+      </div>
+
+      <div class="profile">
+        <img src="static/images/logo2.jpg" class="image" alt="" />
+        <h3 class="name">MATRIX INFINITY</h3>
+        <p class="role"></p>
+        <a href="/about" class="btn">view team</a>
+      </div>
+
+      <nav class="navbar">
+        <a href="/"><i class="fas fa-home"></i><span>home</span></a>
+        <a href="/about"
+          ><img
+            src="static/images/logo2.jpg"
+            width="25px"
+            style="margin-right: 10px"
+          /><span>about our team</span></a
+        >
+        <a href="/courses"
+          ><i class="fas fa-film"></i><span>Recorded Videos</span></a
+        >
+        <a href="test.html"><i class="fas fa-desktop"></i><span>Test</span></a>
+        <a href="/contact"
+          ><i class="fas fa-headset"></i><span>contact us</span></a
+        >
+      </nav>
+    </div>
+    <section class="image-grid" id="courses">
+    <h1 class="heading">CRACK IMAGES</h1>
+    <div class="box-container" id="imageContainer">
+        <!-- Images will be dynamically added here using JavaScript -->
+    </div>
+
+    <script>
+        // Number of images available in the 'crack' folder
+        var numberOfImages = 3; // Replace with the actual number of images
+
+        // Container element
+        var imageContainer = document.getElementById('imageContainer');
+
+        // Generate image elements with dynamic source URLs
+        for (var i = 1; i <= numberOfImages + 1; i++) {
+            // Create box element
+            var box = document.createElement('div');
+            box.className = 'box';
+
+            // Create thumb element
+            var thumb = document.createElement('div');
+            thumb.className = 'thumb';
+
+            // Create image element
+            var img = document.createElement('img');
+            img.src = 'static/images/metal/metal_image_' + i + '.jpg';
+            img.alt = '';
+
+            // Append image to thumb
+            thumb.appendChild(img);
+
+            // Append thumb to box
+            box.appendChild(thumb);
+
+            // Append box to imageContainer
+            imageContainer.appendChild(box);
+        }
+    </script>
+</section>
+</body>
+</html>

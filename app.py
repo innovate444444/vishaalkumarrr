@@ -111,6 +111,10 @@ def index():
 def crack():
     return render_template('crackdetection.html')
 
+@app.route('/abrasion')
+def abrasion():
+    return render_template('abrasion.html')
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
@@ -162,7 +166,7 @@ def upload_video():
         
        
         detected_cracks=backend.crack_processing()
-        print(detected_cracks)
+        # print(detected_cracks)
         # detected_cracks=move_images(detected_cracks)
         # moved_paths = move_images()
         # print(moved_paths)
@@ -203,13 +207,55 @@ def upload_video():
 
 
 
-        print(detected_cracks)
+        # print(detected_cracks)
 
         saved_image_paths = [path.replace('\\', '/') for path in saved_image_paths]
 
         print(saved_image_paths)
 
-        return render_template('home.html', saved_image_paths=saved_image_paths)
+        metal_abrasions=backend.metal_inspect()
+        output_folder = 'static/images/metal'
+
+        # Create the output folder if it doesn't exist
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
+
+        saved_image_path = []
+
+        for index, image_path in enumerate(metal_abrasions):
+            # Read the image
+            img = cv2.imread(image_path)
+
+            # Process the image if needed
+
+            # Extract the file name and extension from the path
+            file_name = "metal_image.jpg"  # Initial file name
+            base_name, extension = os.path.splitext(file_name)
+            index=0
+            # Check if the file already exists
+            while os.path.exists(os.path.join(output_folder, file_name)):
+                index += 1
+                file_name = f"{base_name}_{index}{extension}"
+
+            # Specify the output path for the image in the output folder
+            output_path = os.path.join(output_folder, file_name)
+
+            # Save the image to the output folder
+            cv2.imwrite(output_path, img)
+
+            # Save the path of the saved image
+            saved_image_path.append(output_path)
+
+
+
+        # print(detected_cracks)
+
+        saved_image_path = [path.replace('\\', '/') for path in saved_image_paths]
+
+        print(saved_image_path)
+
+
+        return render_template('home.html', saved_image_path=saved_image_path)
 
         
 def clear_folder(folder_path):
