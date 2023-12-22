@@ -108,9 +108,9 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
-@app.route('/')
-def home():
-    return render_template('login.html')
+# # @app.route('/')
+# def home():
+#     return render_template('login.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -146,7 +146,7 @@ def dashboard():
 @app.route('/logout')
 def logout():
     session.clear()  # Clear session data
-    return redirect('/')
+    return redirect('/home')
 
 
 @app.route('/crack')
@@ -166,6 +166,8 @@ def courses():
     return render_template('courses.html')
 
 
+
+
 @app.route('/rust')
 def rust_result():
     global rust_result
@@ -173,7 +175,7 @@ def rust_result():
 
     # Check if rust result is not already computed
     if rust_result is None:
-        rust_result = backend.corrosionx()
+        rust_result = backend.corrosionx(threshold_values)
         print(rust_result)
 
     return render_template('rust.html', rust=rust_result)
@@ -212,7 +214,7 @@ def upload_video():
         # detected_cracks=move_images(detected_cracks)
         # moved_paths = move_images()
         # print(moved_paths)
-        rust=backend.corrosionx()
+        rust=backend.corrosionx(threshold_values)
         print(rust)
 
         output_folder = 'static/images/crack'
@@ -220,6 +222,11 @@ def upload_video():
         # Create the output folder if it doesn't exist
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
+        else:
+            existing_files = os.listdir(output_folder)
+            for file in existing_files:
+                file_path = os.path.join(output_folder, file)
+                os.remove(file_path)
 
         saved_image_paths = []
 
@@ -257,10 +264,13 @@ def upload_video():
 
         metal_abrasions=backend.metal_inspect()
         output_folder = 'static/images/metal'
-
-        # Create the output folder if it doesn't exist
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
+        else:
+            existing_files = os.listdir(output_folder)
+            for file in existing_files:
+                file_path = os.path.join(output_folder, file)
+                os.remove(file_path)
 
         saved_image_path = []
 
@@ -305,7 +315,8 @@ def clear_folder(folder_path):
     if os.path.exists(folder_path):
         shutil.rmtree(folder_path)
     os.makedirs(folder_path)
-    
+
+
 # source_folder = 'enhancement/output/images/'
 # destination_folder = 'static/output/images/'
 # def move_images():
@@ -336,6 +347,34 @@ def clear_folder(folder_path):
 #         return send_file(file_path, as_attachment=True)
 #     else:
 #         return 'File not found'
+
+@app.route('/threshold')
+def threshold():
+    return render_template('threshold_form.html')
+threshold_values = {
+    "no_corrosion": 0,
+    "very_low": 10000,
+    "low": 100000,
+    "medium": 300000,
+    "high": 500000,
+    "very_high": 800000
+}
+
+@app.route('/update_threshold', methods=['POST'])
+def update_threshold():
+    user_values = {key: int(request.form[key]) for key in threshold_values.keys()}
+    
+    # Validate user input
+    for key, value in user_values.items():
+        if value < 0:
+            return f"Invalid value for {key}: Value must be >= 0"
+    
+    # Update threshold values
+    threshold_values.update(user_values)
+    print(threshold_values)
+    
+    # Redirect to the form page or perform any other action
+    return render_template('threshold_form.html', success=True)
 
 def formula(ver_h, ver_t, hr_h, hr_t, det_t):
     no_of_units = det_t/(ver_t+hr_t)

@@ -10,6 +10,13 @@
 import cv2
 import os
 
+threshold_values = {
+    "no_corrosion": 0,
+    "very_low": 10000,
+    "low": 100000,
+    "medium": 300000,
+    "high": 500000,
+    "very_high": 800000}
 #frames extraction parameters (video_file_path, output_frames_folder, optional_frame_interval(60))
 from script.video import extract_frames
 def frame_extraction():
@@ -97,8 +104,6 @@ def metal_inspect():
     abrasions=metal_abrasion_detection(model_path, image_path)
     return abrasions
 
-
-
 import cv2
 from sys import argv
 import numpy as np
@@ -110,7 +115,7 @@ count = 0
 rust = {}
 i=1
 
-def rust_detect(file):
+def rust_detect(file,threshold_values):
 	
 			
            
@@ -139,37 +144,17 @@ def rust_detect(file):
 	if key_name not in rust:
 		rust[key_name] = []
 	
-	rust[key_name].append(pixels)
+	rust[key_name].append(pixels)	
+	
+    
+    
+
+     
 	
 
-	def defuzzification(pixel):
-		
-		
-	
-		if(pixel == 0):
-			print("NO CORROSION")
-			rust[key_name].append("NO CORROSION")
-			
-		elif(pixel <100000 and pixel > 0):
-			print("LOW CORROSION")
-			rust[key_name].append("LOW CORROSION")
-			
-		elif(pixel<200000 and pixel >= 100000):
-			rust[key_name].append("FAIRLY LOW CORROSION")
-			print("FAIRLY LOW CORROSION")
-		
-			print("FAIRLY LOW CORROSION")
-		elif(pixel <300000 and pixel >= 300000):
-			rust[key_name].append("MEDIUM CORROSION")
-			print("MEDIUM CORROSION")
-		elif(pixel <400000 and pixel >= 300000):
-			print("FAIRLY HIGH CORROSION")
-			rust[key_name].append("FAIRLY HIGH CORROSION")
-		elif(pixel >= 400000):
-			print("VERY high CORROSION")
-			rust[key_name].append("VERY high CORROSION")
-			
-	defuzzification(pixels)
+
+    
+	defuzzification(pixels,key_name,threshold_values)
 	output_img = cv2.resize(output_img, (500,500))
 	img = cv2.resize(img, (500,500))    
 	
@@ -177,8 +162,26 @@ def rust_detect(file):
 	rust[key_name].append(f"static/images/rust/output_image{count}.jpg")
 	cv2.imwrite('static/images/rust/image%d.jpg'%count,img)
 	rust[key_name].append(f"static/images/rust/image{count}.jpg")
-	
-	
+      
+
+def defuzzification(pixel,key_name,thresholds=None):
+            global threshold_values
+            if thresholds:
+                   threshold_values.update(thresholds)
+            if(pixel == 0):
+                  print("NO CORROSION")
+                  rust[key_name].append("NO CORROSION")
+            elif( 0<pixel<threshold_values["low"]):
+                  rust[key_name].append("LOW CORROSION")
+            elif(threshold_values["low"]<=pixel<threshold_values["medium"]):
+                   rust[key_name].append("FAIRLY LOW CORROSION")
+            elif(threshold_values["medium"]<=pixel<threshold_values["high"]):
+                   rust[key_name].append("FAIRLY LOW CORROSION")
+            elif(threshold_values["high"]<=pixel<threshold_values["very_high"]):
+                   rust[key_name].append("FAIRLY LOW CORROSION")
+            elif(pixel>threshold_values["very_high"]):
+                   rust[key_name].append("FAIRLY LOW CORROSION")
+            return None	
 	
 	
 	
@@ -189,7 +192,7 @@ os.system("cls")
 image_folder = 'enhancement/output/images/'
 imgs = os.listdir(image_folder)
 
-def corrosion():
+def corrosion(threshold_values):
 	global count
 	global i
 	
@@ -198,22 +201,40 @@ def corrosion():
 		count+=1
 		img_path = image_folder + x
 		print(img_path)
-		rust_detect(img_path)
+		rust_detect(img_path,threshold_values)
 		i+=1
 
 rust = {}
 
-def corrosionx():
+def corrosionx(threshold):
     global rust
-
+    threshold_values=threshold
     # Check if results are already available
     if not rust:
-        corrosion()
+        corrosion(threshold_values)
 
     return rust
+# threshold
+
+
+
 
 
 
 # frame_extraction()
 # enhancement()
 # crack_processing()
+		# elif(pixel<200000 and pixel >= 100000):
+		# 	rust[key_name].append("FAIRLY LOW CORROSION")
+		# 	print("FAIRLY LOW CORROSION")
+		
+		# 	print("FAIRLY LOW CORROSION")
+		# elif(pixel <300000 and pixel >= 300000):
+		# 	rust[key_name].append("MEDIUM CORROSION")
+		# 	print("MEDIUM CORROSION")
+		# elif(pixel <400000 and pixel >= 300000):
+		# 	print("FAIRLY HIGH CORROSION")
+		# 	rust[key_name].append("FAIRLY HIGH CORROSION")
+		# elif(pixel >= 400000):
+		# 	print("VERY high CORROSION")
+		# 	rust[key_name].append("VERY high CORROSION")

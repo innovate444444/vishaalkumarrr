@@ -1,0 +1,42 @@
+<!-- threshold_form.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Corrosion Threshold Form</title>
+    <script>
+        function validateForm() {
+            var noCorrosion = document.getElementById('no_corrosion').value;
+            var veryLow = document.getElementById('very_low').value;
+            var low = document.getElementById('low').value;
+            var medium = document.getElementById('medium').value;
+            var high = document.getElementById('high').value;
+            var veryHigh = document.getElementById('very_high').value;
+
+            // Perform validation checks here for each value
+            // Ensure the values are within the desired range
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    
+    <h2>Enter Corrosion Threshold Values</h2>
+    <form method="POST" action="/update_threshold" onsubmit="return validateForm()">
+        <label for="no_corrosion">No Corrosion:</label>
+        <input type="number" id="no_corrosion" name="no_corrosion"><br><br>
+        <label for="very_low">Very Low Corrosion:</label>
+        <input type="number" id="very_low" name="very_low"><br><br>
+        <label for="low">Low Corrosion:</label>
+        <input type="number" id="low" name="low"><br><br>
+        <label for="medium">Medium Corrosion:</label>
+        <input type="number" id="medium" name="medium"><br><br>
+        <label for="high">High Corrosion:</label>
+        <input type="number" id="high" name="high"><br><br>
+        <label for="very_high">Very High Corrosion:</label>
+        <input type="number" id="very_high" name="very_high"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
