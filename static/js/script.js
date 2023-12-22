@@ -75,7 +75,7 @@ window.onscroll = () => {
 let isAlertActive = false;
 let alertInterval;
 let originalBackgroundColor;
-let audio = new Audio("/alertsound.mp3");
+let audio = new Audio("static/alertsound.mp3");
 audio.loop = true;
 
 document.addEventListener("keydown", function (event) {
