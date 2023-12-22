@@ -108,6 +108,7 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
+
 # # @app.route('/')
 # def home():
 #     return render_template('login.html')
@@ -376,23 +377,23 @@ def update_threshold():
     # Redirect to the form page or perform any other action
     return render_template('threshold_form.html', success=True)
 
-def formula(ver_h, ver_t, hr_h, hr_t, det_t):
-    no_of_units = det_t/(ver_t+hr_t)
-    hr_comp = int(str(no_of_units[0]))
-    ver_comp = no_of_units-hr_comp
-    hr_tr = hr_comp*hr_h
-    ver_tr = ver_comp*ver_h
-    if hr_tr%2 !=0:
-        depth = ver_h-ver_tr
-    else:
-        depth = ver_tr
+x,y,z=2324345,6789765476,2929857
+def emer(x,y,z):
+    opt_high_x=190909
+    opt_low_x=-86655
+    opt_high_y=32456988
+    opt_low_y=-190909
+    opt_high_z=4342436
+    opt_low_z=-97856
+    if (x<opt_low_x or x>opt_high_x):
+        emer()
+    elif(y<opt_low_y or y>opt_high_y):
+        emer()
+    elif(z<opt_low_z or z>opt_high_z):
+        emer()
+   
     
-    return (hr_tr, depth)
 
-# det=[65,78,800,987,1098,3000]
-# for i in det:
-#     ver_h,ver_t,hr_h,hr_t=91,300,1,5
-#     l1=formula(ver_h,ver_t,hr_h,hr_t)
 
 
 if __name__ == '__main__':
