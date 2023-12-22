@@ -43,12 +43,15 @@
     <section class="image-grid" id="courses">
     <h1 class="heading">DEFECTS</h1>
     <div class="box-container" id="imageContainer">
+      <div id="dataDisplay">
+
+      </div>
         <!-- Images will be dynamically added here using JavaScript -->
     </div>
 
     <script>
         // Number of images available in the 'crack' folder
-        var numberOfImages = 3; // Replace with the actual number of images
+        var numberOfImages = 6; // Replace with the actual number of images
 
         // Container element
         var imageContainer = document.getElementById('imageContainer');
@@ -77,6 +80,24 @@
             // Append box to imageContainer
             imageContainer.appendChild(box);
         }
+        fetch('/send_data')
+      .then(response => response.json())
+      .then(data => {
+        // Data received from the server
+        console.log(data);
+        displayData(data);
+      })
+      .catch(error => console.error('Error:', error));
+
+    function displayData(data) {
+      const dataDisplay = document.getElementById('dataDisplay');
+      const listItems = data.map(pair => {
+        const horizontalFeet = pair[0].toFixed(2);
+        const verticalFeet = pair[1].toFixed(4);
+        return `<p>${horizontalFeet} feet horizontally and ${verticalFeet} feet vertically</p>`;
+      });
+      dataDisplay.innerHTML = listItems.join('');
+    }
     </script>
 </section>
 </body>

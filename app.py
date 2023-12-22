@@ -20,48 +20,6 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
-
-# # @app.route('/')
-# def home():
-#     return render_template('login.html')
-
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-
-    conn = sqlite3.connect('login_database.db')
-    cursor = conn.cursor()
-
-    # Check if the username and password exist in the database
-    cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
-    user = cursor.fetchone()
-
-    conn.close()
-
-    if user:
-        session['logged_in'] = True
-        session['user_id'] = user[0]  # Assuming user_id is the first column
-        session['username'] = user[1]  # Assuming username is the second column
-        session['user_type'] = user[3]  # Assuming user_type is the fourth column
-
-        return redirect('/home')  # Redirect to a dashboard page
-    else:
-        return 'Invalid username or password'  # Show an error message
-
-@app.route('/dashboard')
-def dashboard():
-    if 'logged_in' in session:
-        return f'Welcome, {session["username"]}. Your user type is: {session["user_type"]}'
-    else:
-        return redirect('/')  # Redirect to login if not logged in
-
-@app.route('/logout')
-def logout():
-    session.clear()  # Clear session data
-    return redirect('/home')
-
-
 @app.route('/crack')
 def crack():
     
@@ -79,9 +37,6 @@ def contact():
 def courses():
     return render_template('courses.html')
 
-
-
-
 @app.route('/rust')
 def rust_result():
     global rust_result
@@ -93,9 +48,8 @@ def rust_result():
         print(rust_result)
 
     return render_template('rust.html', rust=rust_result)
-@app.route('/about')
-def about():
-    return render_template('about.html')
+
+
 
 
 @app.route('/upload_video', methods=['POST'])
@@ -108,7 +62,7 @@ def upload_video():
         return 'No selected file'
 
     if file:
-        file_path = 'video/recorded_video.webm'  # Define the file path to replace
+        file_path = 'video/recorded_video.webm'  
 
         # Delete the existing file if it exists
         if os.path.exists(file_path):
@@ -126,10 +80,11 @@ def upload_video():
         detected_cracks=backend.crack_processing()
         det_t = [int(path[-7:-4]) for path in detected_cracks]
         det_t_divided = [value / 30 for value in det_t]
-        for i in det_t_divided:
-            ver_h,ver_t,hr_h,hr_t=20,180,1,5
-            l1=backend.formula(ver_h,ver_t,hr_h,hr_t,i)
-        print(l1)
+        data_to_send = [backend.formula(20, 180, 1, 5, i) for i in det_t_divided]
+
+        @app.route('/send_data')
+        def send_data():
+            return jsonify(data=data_to_send)
 
         rust=backend.corrosionx(threshold_values)
         print(rust)
