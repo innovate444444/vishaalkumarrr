@@ -219,7 +219,7 @@ def corrosionx(threshold):
 
 def formula(ver_h, ver_t, hr_h, hr_t, det_t):
     no_of_units = det_t/(ver_t+hr_t)
-    hr_comp = int(str(no_of_units[0]))
+    hr_comp = int(str(no_of_units)[0])
     ver_comp = no_of_units-hr_comp
     hr_tr = hr_comp*hr_h
     ver_tr = ver_comp*ver_h
