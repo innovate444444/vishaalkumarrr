@@ -1400,6 +1400,57 @@ section{
    margin: 1rem 0;
 }
 
+.threshold .row{
+   display: flex;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: 1.5rem;
+}
+
+.threshold .row .image{
+   flex: 1 1 50rem;
+}
+
+.threshold .row .image img{
+   width: 100%;
+}
+
+.threshold .row form{
+   flex: 1 1 30rem;
+   background-color: var(--white);
+   padding: 2rem;
+   text-align: center;
+}
+
+.threshold .row label{
+   margin-bottom: 1rem;
+   text-transform: capitalize;
+   color:var(--black);
+   font-size: 2.5rem;
+}
+
+.threshold h3{
+   margin-bottom: 1rem;
+   text-transform: capitalize;
+   color:var(--black);
+   font-size: 2.5rem;
+}
+
+.threshold .row form .box{
+   width: 100%;
+   border-radius: .5rem;
+   background-color: var(--light-bg);
+   margin: 1rem 0;
+   padding: 1.4rem;
+   font-size: 1.8rem;
+   color: var(--black);
+}
+
+.threshold .row form textarea{
+   height: 20rem;
+   resize: none;
+}
+
 
 
 
