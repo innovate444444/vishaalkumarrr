@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Keyboard Alert</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+    }
+    .red {
+      animation: blinkRed 0.5s infinite alternate;
+    }
+    @keyframes blinkRed {
+      from {
+        background-color: red;
+      }
+      to {
+        background-color: black;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Function to play danger sound effect
+    function playDangerSound() {
+      var audio = new Audio(); // Create a new audio element
+      audio.src = 'danger_sound.mp3'; // Set source - replace 'danger_sound.mp3' with your file
+      audio.play().catch(error => {
+        console.error('Error playing audio:', error);
+      });
+    }
+
+    // Function to show warning message and trigger danger sound for 10 seconds
+    function handleEmergency() {
+      alert("ROV is going out of control due to obstacles!");
+      playDangerSound();
+
+      setTimeout(function () {
+        alert("Warning has ended");
+      }, 10000); // Show warning for 10 seconds
+    }
+
+    // Function to handle key press event
+    function handleKeyPress(event) {
+      if (event.key === 'p') {
+        handleEmergency();
+        document.body.classList.add('red'); // Add 'red' class for blinking red screen
+      }
+    }
+
+    // Function to handle key release event
+    function handleKeyRelease(event) {
+      if (event.key === 'p') {
+        document.body.classList.remove('red'); // Remove 'red' class when key is released
+      }
+    }
+
+    // Event listeners for key press and release
+    document.addEventListener('keydown', handleKeyPress);
+    document.addEventListener('keyup', handleKeyRelease);
+  </script>
+  <h1>Press 'P' for Alert</h1>
+</body>
+</html>
