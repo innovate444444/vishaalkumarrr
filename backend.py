@@ -23,8 +23,17 @@ def frame_extraction():
     video_parent_dir = 'video/'
     output_frames_folder = 'frames'
     optional_frame_interval = 30
+    if not os.path.exists(output_frames_folder):
+        os.makedirs(output_frames_folder)
+    else:
+        # If the folder exists, delete all existing files in it
+        existing_files = os.listdir(output_frames_folder)
+        for file in existing_files:
+            file_path = os.path.join(output_frames_folder, file)
+            os.remove(file_path)
+
     x = os.listdir(video_parent_dir)
-    video_file_path = video_parent_dir + x[0]
+    video_file_path = os.path.join(video_parent_dir, x[0])
 
     extract_frames(video_file_path, output_frames_folder, optional_frame_interval)
     print("\n\nEXTRACTION OF FRAMES COMPLETED SUCCESSFULLY\n\n")
@@ -76,7 +85,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 model_path = 'metal/models/newmetal.h5'
-image_path = 'metal/test/'
+image_path = 'enhancement/output/images/'
 
 
 
