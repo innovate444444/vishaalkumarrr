@@ -22,9 +22,10 @@ det_t = [int(path[-7:-4]) for path in detected_cracks]
 
 print(det_t)
   # Displaying the extracted digits
+det_t_divided = [value / 30 for value in det_t] 
 
 
-for i in det_t:
+for i in det_t_divided:
     ver_h,ver_t,hr_h,hr_t=20,180,1,5
     l1=formula(ver_h,ver_t,hr_h,hr_t,i)
 

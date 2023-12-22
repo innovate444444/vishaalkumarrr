@@ -227,15 +227,7 @@ def formula(ver_h, ver_t, hr_h, hr_t, det_t):
         depth = ver_h-ver_tr
     else:
         depth = ver_tr
-    
     return (hr_tr, depth)
-
-det=[700]
-for i in det:
-    ver_h,ver_t,hr_h,hr_t=20,180,1,5
-    l1=formula(ver_h,ver_t,hr_h,hr_t,i)
-
-    print(l1)
 
 
 

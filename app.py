@@ -152,6 +152,7 @@ def logout():
 
 @app.route('/crack')
 def crack():
+    
     return render_template('crackdetection.html')
 
 @app.route('/abrasion')
@@ -211,6 +212,22 @@ def upload_video():
         
        
         detected_cracks=backend.crack_processing()
+        det_t = [int(path[-7:-4]) for path in detected_cracks]
+        det_t_divided = [value / 30 for value in det_t]
+        for i in det_t_divided:
+            ver_h,ver_t,hr_h,hr_t=20,180,1,5
+            l1=backend.formula(ver_h,ver_t,hr_h,hr_t,i)
+        print(l1)
+
+  # Displaying the extracted digits
+ 
+
+
+
+
+    
+
+       
         # print(detected_cracks)
         # detected_cracks=move_images(detected_cracks)
         # moved_paths = move_images()
