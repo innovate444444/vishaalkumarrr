@@ -27,35 +27,7 @@ toggleBtn.onclick = (e) => {
   }
 };
 
-let isAlertActive = false;
-let alertInterval;
-let originalBackgroundColor;
-let audio = new Audio("alertsound.mp3");
-audio.loop = true;
 
-document.addEventListener("keydown", function (event) {
-  if (event.key === "P" || event.key === "p") {
-    if (!isAlertActive) {
-      originalBackgroundColor = document.body.style.backgroundColor;
-      alertInterval = setInterval(function () {
-        document.body.style.backgroundColor =
-          document.body.style.backgroundColor === "red"
-            ? originalBackgroundColor
-            : "red";
-      }, 500);
-
-      audio.play();
-
-      isAlertActive = true;
-    } else {
-      clearInterval(alertInterval);
-      document.body.style.backgroundColor = originalBackgroundColor;
-      audio.pause();
-      audio.currentTime = 0;
-      isAlertActive = false;
-    }
-  }
-});
 
 let profile = document.querySelector(".header .flex .profile");
 
@@ -99,3 +71,33 @@ window.onscroll = () => {
     body.classList.remove("active");
   }
 };
+
+let isAlertActive = false;
+let alertInterval;
+let originalBackgroundColor;
+let audio = new Audio("/alertsound.mp3");
+audio.loop = true;
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "P" || event.key === "p") {
+    if (!isAlertActive) {
+      originalBackgroundColor = document.body.style.backgroundColor;
+      alertInterval = setInterval(function () {
+        document.body.style.backgroundColor =
+          document.body.style.backgroundColor === "red"
+            ? originalBackgroundColor
+            : "red";
+      }, 500);
+
+      audio.play();
+
+      isAlertActive = true;
+    } else {
+      clearInterval(alertInterval);
+      document.body.style.backgroundColor = originalBackgroundColor;
+      audio.pause();
+      audio.currentTime = 0;
+      isAlertActive = false;
+    }
+  }
+});
