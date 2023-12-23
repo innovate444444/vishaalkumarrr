@@ -69,6 +69,50 @@
         <h1 class="heading">RUST DETECTION RESULTS</h1>
         <div class="box-container" id="rustImageContainer">
             <!-- Rust detection results will be dynamically added here using JavaScript -->
+            <div class="box">
+              <div class="thumb">
+                <img src="/static/images/imagerust1.jpg" alt="" />
+              </div>
+              <div class="thumb">
+                <img src="/static/images/output_image1.jpg" alt="" />
+              </div>
+              
+              <p style="color: white; font-size: 20px;">LEVEL : No Corrosion</p>
+              <p style="color: white; font-size: 20px;">PIXEL COUNT : 0</p>
+            </div>
+  
+            <div class="box">
+              <div class="thumb">
+                <img src="/static/images/imagerust19.jpg" alt="" />
+              </div>
+              <div class="thumb">
+                <img src="/static/images/output_image12.jpg" alt="" />
+              </div>
+              <p style="color: white; font-size: 20px;">LEVEL : Low Corrosion</p>
+              <p style="color: white; font-size: 20px;">PIXEL COUNT : 10466</p>
+            </div>
+  
+            <div class="box">
+              <div class="thumb">
+                <img src="/static/images/imagerust6.jpg" alt="" />
+              </div>
+              <div class="thumb">
+                <img src="/static/images/output_image7.jpg" alt="" />
+              </div>
+              <p style="color: white; font-size: 20px;">LEVEL : Medium Corrosion</p>
+              <p style="color: white; font-size: 20px;">PIXEL COUNT :189765</p>
+            </div>
+  
+            <div class="box">
+              <div class="thumb">
+                <img src="/static/images/imagerust4.jpg" alt="" />
+              </div>
+              <div class="thumb">
+                <img src="/static/images/output_image4.jpg" alt="" />
+              </div>
+              <p style="color: white; font-size: 20px;">LEVEL : High Corrosion</p>
+              <p style="color: white; font-size: 20px;">PIXEL COUNT : 1769481</p>
+            </div>
         </div>
     <style>
         h3{
@@ -80,6 +124,7 @@
         }
 
     </style>
+
         <script>
             var rustResults = {{ rust | tojson | safe }};
 
