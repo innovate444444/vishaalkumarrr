@@ -201,7 +201,7 @@ defect_distances = [
     (0, 0.108),
     (0, 0.216),
     (0, 0.324),
-    # Add more distances for each image index as needed
+    
 ]
 
 @app.route('/defect_distances')
