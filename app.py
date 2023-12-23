@@ -83,10 +83,13 @@ def upload_video():
         det_t_divided = [value / 30 for value in det_t]
         data_to_send = [backend.formula(20, 180, 1, 5, i) for i in det_t_divided]
         print(data_to_send)
+        
 
         # @app.route('/send_data')
         # def send_data():
         #     return jsonify(data=data_to_send)
+
+        
 
         rust=backend.corrosionx(threshold_values)
         print(rust)
@@ -190,6 +193,20 @@ def clear_folder(folder_path):
         shutil.rmtree(folder_path)
     os.makedirs(folder_path)
 
+
+
+# Defect distances associated with each image index
+defect_distances = [
+    (0, 0.0),
+    (0, 0.108),
+    (0, 0.216),
+    (0, 0.324),
+    # Add more distances for each image index as needed
+]
+
+@app.route('/defect_distances')
+def get_defect_distances():
+    return jsonify(defect_distances)
 
 
 

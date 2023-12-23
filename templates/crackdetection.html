@@ -18,87 +18,92 @@
         <p class="role"></p>
         <a href="/about" class="btn">view team</a>
       </div>
+
       <nav class="navbar">
         <a href="/"><i class="fas fa-home"></i><span>home</span></a>
-
+        <a href="/about"
+          ><img
+            src="static/images/logo2.jpg"
+            width="25px"
+            style="margin-right: 10px"
+          /><span>about our team</span></a
+        >
         <a href="/courses"
           ><i class="fas fa-film"></i><span>Recorded Videos</span></a
         >
-
-
-
-        
-        <a href="/rust"
-          ><i class="fas fa-headset"></i><span>Corrosion detection</span></a
-        >
-        <a href="/crack"
-        ><i class="fas fa-film"></i><span>Detected defects</span></a
-      >
-
+        <a href="test.html"><i class="fas fa-desktop"></i><span>Test</span></a>
         <a href="/contact"
           ><i class="fas fa-headset"></i><span>contact us</span></a
         >
       </nav>
     </div>
     <section class="image-grid" id="courses">
-    <h1 class="heading">DEFECTS</h1>
+    <h1 class="heading">CRACK IMAGES</h1>
     <div class="box-container" id="imageContainer">
-      <div id="dataDisplay">
-
-      </div>
         <!-- Images will be dynamically added here using JavaScript -->
     </div>
 
-    <script>
-        // Number of images available in the 'crack' folder
-        var numberOfImages = 6; // Replace with the actual number of images
+    <!-- Your existing HTML structure -->
+<script>
+  // Number of images available in the 'crack' folder
+  var numberOfImages = 9; // Replace with the actual number of images
 
-        // Container element
-        var imageContainer = document.getElementById('imageContainer');
+  // Container element
+  var imageContainer = document.getElementById('imageContainer');
 
-        // Generate image elements with dynamic source URLs
-        for (var i = 1; i <= numberOfImages + 1; i++) {
-            // Create box element
-            var box = document.createElement('div');
-            box.className = 'box';
-
-            // Create thumb element
-            var thumb = document.createElement('div');
-            thumb.className = 'thumb';
-
-            // Create image element
-            var img = document.createElement('img');
-            img.src = 'static/images/crack/crack_image_' + i + '.jpg';
-            img.alt = '';
-
-            // Append image to thumb
-            thumb.appendChild(img);
-
-            // Append thumb to box
-            box.appendChild(thumb);
-
-            // Append box to imageContainer
-            imageContainer.appendChild(box);
-        }
-        fetch('/send_data')
+  // Fetch defect distances from the backend
+  fetch('/defect_distances')
       .then(response => response.json())
       .then(data => {
-        // Data received from the server
-        console.log(data);
-        displayData(data);
+          displayData(data);
       })
       .catch(error => console.error('Error:', error));
 
-    function displayData(data) {
-      const dataDisplay = document.getElementById('dataDisplay');
-      const listItems = data.map(pair => {
-        const horizontalFeet = pair[0].toFixed(2);
-        const verticalFeet = pair[1].toFixed(4);
-        return `<p>${horizontalFeet} feet horizontally and ${verticalFeet} feet vertically</p>`;
-      });
-      dataDisplay.innerHTML = listItems.join('');
-    }
-    </script>
+  function displayData(distances) {
+      // Iterate through each image
+      for (let i = 1; i <= numberOfImages; i++) {
+          const distance = distances[i - 1];
+
+          // Create elements for displaying the image
+          const box = document.createElement('div');
+          box.className = 'box';
+
+          // Create thumb element
+          const thumb = document.createElement('div');
+          thumb.className = 'thumb';
+
+          // Create image element
+          const img = document.createElement('img');
+          img.src = `static/images/crack/crack_image_${i}.jpg`;
+          img.alt = '';
+
+          // Append image to thumb
+          thumb.appendChild(img);
+
+          // Create paragraph element for distance info
+          const distanceInfo = document.createElement('p');
+          if (distance) {
+              distanceInfo.textContent = `Horizontal: ${distance[0].toFixed(2)} - Vertical: ${distance[1].toFixed(4)}`;
+          } else {
+              distanceInfo.textContent = 'No distance data available';
+          }
+
+          // Append thumb and distance info to box
+          box.appendChild(thumb);
+          box.appendChild(distanceInfo);
+
+          // Append box to imageContainer
+          imageContainer.appendChild(box);
+      }
+  }
+</script>
+<style>
+  p{
+    font-size: 20px;
+    color: white;
+  }
+</style>
+
 </section>
 </body>
 </html>
