@@ -78,13 +78,15 @@ def upload_video():
         
        
         detected_cracks=backend.crack_processing()
+
         det_t = [int(path[-7:-4]) for path in detected_cracks]
         det_t_divided = [value / 30 for value in det_t]
         data_to_send = [backend.formula(20, 180, 1, 5, i) for i in det_t_divided]
+        print(data_to_send)
 
-        @app.route('/send_data')
-        def send_data():
-            return jsonify(data=data_to_send)
+        # @app.route('/send_data')
+        # def send_data():
+        #     return jsonify(data=data_to_send)
 
         rust=backend.corrosionx(threshold_values)
         print(rust)
