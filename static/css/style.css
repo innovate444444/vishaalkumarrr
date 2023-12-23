@@ -388,6 +388,39 @@ section{
    left: -30rem;
 }
 
+
+
+
+.guide .box-container{
+   
+   display: grid;
+   grid-template-columns: repeat(auto-fit, 37.5rem);
+   gap:1.5rem;
+   justify-content: center;
+   align-items: flex-start;
+}
+
+.guide .box-container .box{
+   background-color: var(--white);
+   border-radius: .5rem;
+   padding:2rem;
+}
+
+.guide .box-container .box .title{
+   font-size: 2rem;
+   color: var(--black);
+   text-transform: capitalize;
+}
+
+.guide .box-container .box .thumb img{
+   width: 100%;
+   height: 30rem;
+   object-fit: cover;
+   border-radius: .5rem;
+}
+
+
+
 .home-grid .box-container{
    
    display: grid;

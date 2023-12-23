@@ -18,56 +18,111 @@
             return true;
         }
     </script>
+    <!-- font awesome cdn link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+    />
+
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <header class="header">
-        <section class="flex">
-          <a href="/" class="logo"
-            ><img src="/static/images/bharat-hydrovision.png" width="300px" alt="" srcset=""
-          /></a>
-  
-          
-        </section>
-      </header>
+  <header class="header">
+    <section class="flex">
+      <a href="/" class="logo"
+        ><img src="/static/images/logofinal.png" width="300px" alt="" srcset=""
+      /></a>
 
-      <div class="side-bar" style="background-image: url(static/images/greyblur2.png);">
-        <div id="close-btn">
-          <i class="fas fa-times"></i>
-        </div>
-  
-        <div class="profile">
-          <img src="/static/images/logo2.jpg" class="image" alt="" />
-          <h3 class="name">MATRIX INFINITY</h3>
-          <p class="role"></p>
-          <a href="/about" class="btn">view team</a>
-        </div>
-  
-        <nav class="navbar">
-          <a href="/"><i class="fas fa-home"></i><span>home</span></a>
-  
-          <a href="/courses"
-            ><i class="fas fa-film"></i><span>Recorded Videos</span></a
-          >
-  
-  
-  
-          
-          <a href="/rust"
-            ><i class="fas fa-headset"></i><span>Corrosion detection</span></a
-          >
-          <a href="/abrasion"
-          ><i class="fas fa-film"></i><span>Detected defects</span></a
-        >
-  
-          <a href="/contact"
-            ><i class="fas fa-headset"></i><span>contact us</span></a
-          >
-        </nav>
-      </div>
+      <!-- <div class="icons">
+        <div id="menu-btn" class="fas fa-bars"></div>
+        <div id="search-btn" class="fas fa-search"></div>
+        <div id="user-btn" class="fas fa-user"></div>
+        <div id="toggle-btn" class="fas fa-sun"></div>
+      </div> -->
+
+      
+    </section>
+  </header>
+
+  <div class="side-bar" style="background-image: url(static/images/greyblur2.png);">
+    <div id="close-btn">
+      <i class="fas fa-times"></i>
+    </div>
+
+    <div class="profile">
+      <img src="static/images/logo2.jpg" class="image" alt="" />
+      <h3 class="name">MATRIX INFINITY</h3>
+      <p class="role"></p>
+      <a href="/about" class="btn">view team</a>
+    </div>
+
+    <nav class="navbar">
+      <a href="/"><i class="fas fa-home"></i><span>home</span></a>
+
+      <a href="/courses"
+        ><i class="fas fa-film"></i><span>Recorded Videos</span></a
+      >
+
+
+
+      
+      <a href="/rust"
+        ><i class="fa fa-braille"></i><span>Corrosion detection</span></a
+      >
+      <a href="/crack"
+      ><i class="fa fa-exclamation-triangle"></i><span>Detected defects</span></a
+    >
+
+      <a href="/contact"
+        ><i class="fas fa-headset"></i><span>contact us</span></a
+      >
+
+      <a href="/threshold"
+        ><i class="fa fa-sliders"></i><span>Set threshold</span></a
+      >
+    </nav>
+  </div>
     
+      <section class="guide">
+        <h3 class="heading" style="color: white; font-size: 35px;">Guide to choose threshold</h3>
+        <div class="box-container">
+          <div class="box">
+            <div class="thumb">
+              <img src="/static/images/imagerust1.jpg" alt="" />
+            </div>
+            <p style="color: white; font-size: 20px;">LEVEL : No Corrosion</p>
+            <p style="color: white; font-size: 20px;">PIXEL COUNT : 0</p>
+          </div>
+
+          <div class="box">
+            <div class="thumb">
+              <img src="/static/images/imagerust19.jpg" alt="" />
+            </div>
+            <p style="color: white; font-size: 20px;">LEVEL : Low Corrosion</p>
+            <p style="color: white; font-size: 20px;">PIXEL COUNT : 3100</p>
+          </div>
+
+          <div class="box">
+            <div class="thumb">
+              <img src="/static/images/imagerust6.jpg" alt="" />
+            </div>
+            <p style="color: white; font-size: 20px;">LEVEL : Medium Corrosion</p>
+            <p style="color: white; font-size: 20px;">PIXEL COUNT : 356072</p>
+          </div>
+
+          <div class="box">
+            <div class="thumb">
+              <img src="/static/images/imagerust4.jpg" alt="" />
+            </div>
+            <p style="color: white; font-size: 20px;">LEVEL : High Corrosion</p>
+            <p style="color: white; font-size: 20px;">PIXEL COUNT : 479843</p>
+          </div>
+        </div>
+  
+      </section>  
+
     <section class="threshold">
-        <h3>Enter Corrosion Threshold Values</h3>
+        <h3 class="heading">Enter Corrosion Threshold Values</h3>
         <div class="row">
             
             <form method="POST" action="/update_threshold" onsubmit="return validateForm()">
@@ -88,5 +143,8 @@
             </form>
         </div>
     </section>
+
+    <script src="/static/js/script.js"></script>
+    
 </body>
 </html>
